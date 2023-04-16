@@ -39,7 +39,7 @@ export type NaviOptions = {
   testing?: boolean;
 };
 
-export default class Navi {
+export class Navi {
   private user: User;
   private software: Software;
   private options?: NaviOptions;
