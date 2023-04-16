@@ -2,14 +2,13 @@
   "name": "nav-invoice",
   "version": "1.0.0",
   "description": "Node.js module that provides an interface to connect to the NAV online invoicing system using the official NAV Invoice API.",
-  "main": "index.js",
   "repository": {
+    "type": "git",
     "url": "https://github.com/NRobert-jmdrgg/nav-invoice"
   },
-  
+  "main": "dist/navi.js",
   "scripts": {
-    "build": "tsc",
-    "start": "node dist/index.js"
+    "build": "tsc"
   },
   "keywords": [
     "nav",
