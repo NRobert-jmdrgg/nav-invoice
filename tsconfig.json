@@ -18,6 +18,7 @@
     "lib": ["esnext"],
     "outDir": "dist",
     "sourceMap": true,  
+    "allowSyntheticDefaultImports": false
   },  
   "exclude": [
     "node_modules",
