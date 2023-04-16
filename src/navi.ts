@@ -39,8 +39,6 @@ export type NaviOptions = {
   testing?: boolean;
 };
 
-export let url = '';
-
 export default class Navi {
   private user: User;
   private software: Software;
