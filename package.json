@@ -7,6 +7,7 @@
     "url": "https://github.com/NRobert-jmdrgg/nav-invoice"
   },
   "main": "dist/navi.js",
+  "types": "dist/navi.d.ts",
   "scripts": {
     "build": "tsc"
   },

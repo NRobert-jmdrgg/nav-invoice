@@ -17,6 +17,10 @@
     "skipLibCheck": true,
     "lib": ["esnext"],
     "outDir": "dist",
-    "sourceMap": true
-  }
+    "sourceMap": true,  
+  },  
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
 }
