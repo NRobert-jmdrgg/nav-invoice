@@ -1,8 +1,9 @@
 import axios from 'axios';
 import { NaviOptions } from './navi';
 import { GeneralErrorResponse, GeneralExceptionResponse } from './operations/types/error';
-import { fixKnownArrays } from './utils/fixKnownArrays';
+// import { fixKnownArrays } from './utils/fixKnownArrays';
 import readFromXml from './utils/readFromXml';
+import { GeneralError, GeneralException } from './operations/error';
 
 type Response<R> = R & {
   responseXml?: string;
@@ -21,8 +22,9 @@ type Response<R> = R & {
 export default async function sendNavRequest<R>(
   requestXml: string,
   operation: string,
+  knownArrays: string[],
   options?: NaviOptions
-): Promise<Response<R> | null> {
+): Promise<Response<R>> {
   // request küldés
   let data: R | undefined;
   let responseXml: string;
@@ -39,7 +41,7 @@ export default async function sendNavRequest<R>(
     const response = await axios.post(`${url}v3/${operation}`, requestXml, config);
     responseXml = response.data;
 
-    const xmlobj = await readFromXml<R>(responseXml);
+    const xmlobj = await readFromXml<R>(responseXml, knownArrays);
     data = xmlobj;
 
     return {
@@ -48,28 +50,25 @@ export default async function sendNavRequest<R>(
       requestXml: options?.returnWithXml ? requestXml : undefined,
     };
   } catch (e: any) {
-    if (e.response?.data) {
+    if (e.response) {
       if (e.response.data.includes('GeneralExceptionResponse')) {
-        let exception = await readFromXml<GeneralExceptionResponse>(e.response.data);
-        fixKnownArrays(exception, generalExceptionResponseKnownArrays);
-        console.log(JSON.stringify(exception, null, 2));
-        throw exception;
+        let exception = await readFromXml<GeneralExceptionResponse>(
+          e.response.data,
+          generalExceptionResponseKnownArrays
+        );
+        throw new GeneralException(exception);
       } else if (e.response.data.includes('GeneralErrorResponse')) {
-        const error = await readFromXml<GeneralErrorResponse>(e.response.data);
-        fixKnownArrays(error, generalErrorResponseKnownArrays);
-        console.log(JSON.stringify(error, null, 2));
-        throw error;
+        const error = await readFromXml<GeneralErrorResponse>(e.response.data, generalErrorResponseKnownArrays);
+        throw new GeneralError(error);
       }
+      throw e.response;
+    } else if (e.request) {
+      throw e.reqest;
     } else {
-      if (typeof e === 'object') {
-        console.log(JSON.stringify(e, null, 2));
-      } else {
-        console.log(e);
-      }
+      throw e;
     }
-    return null;
   }
 }
 
-const generalExceptionResponseKnownArrays = ['notifications.notification'];
-const generalErrorResponseKnownArrays = ['technicalValidationMessages'];
+const generalExceptionResponseKnownArrays = ['GeneralExceptionResponse.notifications.notification'];
+const generalErrorResponseKnownArrays = ['GeneralErrorResponse.technicalValidationMessages'];

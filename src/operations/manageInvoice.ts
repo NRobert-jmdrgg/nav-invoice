@@ -7,7 +7,7 @@ import sendNavRequest from '../sendNavRequest';
 import { ManageInvoiceResponse } from './types/response';
 import writeToXML from '../utils/writeToXML';
 import { OrderSchema, reOrder } from '../utils/reOrder';
-import { fixKnownArrays } from '../utils/fixKnownArrays';
+// import { fixKnownArrays } from '../utils/fixKnownArrays';
 import { NaviOptions } from '../navi';
 
 /**
@@ -24,7 +24,7 @@ export default async function manageInvoiceRequest(
   software: Software,
   props: ManageInvoiceProps,
   options?: NaviOptions
-): Promise<ManageInvoiceResponse | null> {
+): Promise<ManageInvoiceResponse> {
   // sorrend
   reOrder(props, orderSchema);
 
@@ -46,10 +46,18 @@ export default async function manageInvoiceRequest(
     )
   );
 
-  const response = await sendNavRequest<ManageInvoiceResponse>(writeToXML(request), 'manageInvoice', options);
-  fixKnownArrays(response, knownArrays);
+  try {
+    const response = await sendNavRequest<ManageInvoiceResponse>(
+      writeToXML(request),
+      'manageInvoice',
+      knownArrays,
+      options
+    );
 
-  return response ?? null;
+    return response;
+  } catch (error) {
+    throw error;
+  }
 }
 
 const orderSchema: OrderSchema[] = [
@@ -67,4 +75,4 @@ const orderSchema: OrderSchema[] = [
   },
 ];
 
-const knownArrays = ['result.notifications.notification'];
+const knownArrays = ['ManageInvoiceResponse.result.notifications.notification'];

@@ -18,7 +18,7 @@ export default async function tokenExchangeRequest(
   user: User,
   software: Software,
   options?: NaviOptions
-): Promise<string | null> {
+): Promise<string> {
   // request létrehozása
   const request = createRequest('TokenExchangeRequest', user, software);
   const requestId = request['TokenExchangeRequest']['common:header']['common:requestId'];
@@ -31,20 +31,30 @@ export default async function tokenExchangeRequest(
     user.signatureKey
   );
 
-  const response = await sendNavRequest<TokenExchangeResponse>(writeToXML(request), 'tokenExchange', options);
+  try {
+    const response = await sendNavRequest<TokenExchangeResponse>(
+      writeToXML(request),
+      'tokenExchange',
+      knownArrays,
+      options
+    );
+    const encryptedToken = response?.TokenExchangeResponse.encodedExchangeToken;
 
-  const encryptedToken = response?.encodedExchangeToken;
+    // dekódolás
+    // iv nem kell
+    const decipher = createDecipheriv('aes-128-ecb', user.exchangeKey, null);
 
-  // dekódolás
-  // iv nem kell
-  const decipher = createDecipheriv('aes-128-ecb', user.exchangeKey, null);
+    let exchangeToken = '';
+    // base64 -> utf8
+    if (encryptedToken) {
+      exchangeToken = decipher.update(encryptedToken, 'base64', 'utf8');
+      exchangeToken += decipher.final('utf8');
+    }
 
-  let exchangeToken = '';
-  // base64 -> utf8
-  if (encryptedToken) {
-    exchangeToken = decipher.update(encryptedToken, 'base64', 'utf8');
-    exchangeToken += decipher.final('utf8');
+    return exchangeToken;
+  } catch (error) {
+    throw error;
   }
-
-  return exchangeToken ?? null;
 }
+
+const knownArrays: string[] = [];

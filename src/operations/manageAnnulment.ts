@@ -9,7 +9,7 @@ import { invoiceAnnulment } from '../operations/types/invoiceAnnulment';
 import { annulmentOperation } from './types/requestProps';
 import { utf8ToBase64 } from '../utils/base64';
 import { OrderSchema, reOrder } from '../utils/reOrder';
-import { fixKnownArrays } from '../utils/fixKnownArrays';
+// import { fixKnownArrays } from '../utils/fixKnownArrays';
 import { NaviOptions } from '../navi';
 
 /**
@@ -25,7 +25,7 @@ export async function manageAnnulmentRequest(
   software: Software,
   props: ManageAnnulmentProps,
   options?: NaviOptions
-): Promise<ManageAnnulmentResponse | null> {
+): Promise<ManageAnnulmentResponse> {
   // sorrend
 
   reOrder(props, orderSchema);
@@ -49,11 +49,18 @@ export async function manageAnnulmentRequest(
     )
   );
 
-  const response = await sendNavRequest<ManageAnnulmentResponse>(writeToXML(request), 'manageAnnulment', options);
+  try {
+    const response = await sendNavRequest<ManageAnnulmentResponse>(
+      writeToXML(request),
+      'manageAnnulment',
+      knownArrays,
+      options
+    );
 
-  fixKnownArrays(response, knownArrays);
-
-  return response ?? null;
+    return response;
+  } catch (error) {
+    throw error;
+  }
 }
 
 export type invoiceAnnulmentProps = {
@@ -68,7 +75,7 @@ export type invoiceAnnulmentProps = {
  */
 export function createInvoiceAnnulmentOperations(props: invoiceAnnulmentProps[]): annulmentOperation[] {
   return props.map((p) => {
-    const xml = writeToXML(p.invoiceAnnulment, 'InvoiceAnnulment');
+    const xml = writeToXML({ InvoiceAnnulment: p.invoiceAnnulment });
     const base64string = utf8ToBase64(xml);
     return {
       index: p.index,
@@ -89,4 +96,4 @@ const orderSchema: OrderSchema[] = [
   },
 ];
 
-const knownArrays = ['result.notifications.notification'];
+const knownArrays = ['ManageAnnulmentResponse.result.notifications.notification'];

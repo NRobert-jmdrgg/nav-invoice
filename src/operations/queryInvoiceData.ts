@@ -6,7 +6,7 @@ import sendNavRequest from '../sendNavRequest';
 import { QueryInvoiceDataResponse } from './types/response';
 import writeToXML from '../utils/writeToXML';
 import { OrderSchema, reOrder } from '../utils/reOrder';
-import { fixKnownArrays } from '../utils/fixKnownArrays';
+// import { fixKnownArrays } from '../utils/fixKnownArrays';
 import { NaviOptions } from '../navi';
 
 /**
@@ -23,7 +23,7 @@ export default async function queryInvoiceDataRequest(
   software: Software,
   props: QueryInvoiceDataProps,
   options?: NaviOptions
-): Promise<QueryInvoiceDataResponse | null> {
+): Promise<QueryInvoiceDataResponse> {
   // sorrend
   reOrder(props, orderSchema);
 
@@ -39,11 +39,18 @@ export default async function queryInvoiceDataRequest(
     user.signatureKey
   );
 
-  const response = await sendNavRequest<QueryInvoiceDataResponse>(writeToXML(request), 'queryInvoiceData', options);
+  try {
+    const response = await sendNavRequest<QueryInvoiceDataResponse>(
+      writeToXML(request),
+      'queryInvoiceData',
+      knownArrays,
+      options
+    );
 
-  fixKnownArrays(response, knownArrays);
-
-  return response ?? null;
+    return response;
+  } catch (error) {
+    throw error;
+  }
 }
 
 const orderSchema: OrderSchema[] = [
@@ -53,4 +60,4 @@ const orderSchema: OrderSchema[] = [
   },
 ];
 
-const knownArrays = ['result.notifications.notification'];
+const knownArrays = ['QueryInvoiceDataResponse.result.notifications.notification'];

@@ -6,7 +6,7 @@ import sendNavRequest from '../sendNavRequest';
 import { QueryTransactionStatusResponse } from './types/response';
 import writeToXML from '../utils/writeToXML';
 import { OrderSchema, reOrder } from '../utils/reOrder';
-import { fixKnownArrays } from '../utils/fixKnownArrays';
+// import { fixKnownArrays } from '../utils/fixKnownArrays';
 import { NaviOptions } from '../navi';
 
 /**
@@ -22,7 +22,7 @@ export default async function queryTransactionStatusRequest(
   software: Software,
   props: QueryTransactionStatusProps,
   options?: NaviOptions
-): Promise<QueryTransactionStatusResponse | null> {
+): Promise<QueryTransactionStatusResponse> {
   reOrder(props, orderSchema);
 
   // request létrehozása
@@ -36,16 +36,18 @@ export default async function queryTransactionStatusRequest(
     timestamp,
     user.signatureKey
   );
+  try {
+    const response = await sendNavRequest<QueryTransactionStatusResponse>(
+      writeToXML(request),
+      'queryTransactionStatus',
+      knownArrays,
+      options
+    );
 
-  const response = await sendNavRequest<QueryTransactionStatusResponse>(
-    writeToXML(request),
-    'queryTransactionStatus',
-    options
-  );
-
-  fixKnownArrays(response, knownArrays);
-
-  return response ?? null;
+    return response;
+  } catch (error) {
+    throw error;
+  }
 }
 
 const orderSchema: OrderSchema[] = [
@@ -56,9 +58,9 @@ const orderSchema: OrderSchema[] = [
 ];
 
 const knownArrays = [
-  'result.notifications.notification',
-  'processsingResult.processingResult',
-  'processsingResult.processingResult.technicalValidationMessages',
-  'processsingResult.processingResult.businessValidationMessages',
-  'processsingResult.processingResult.businessValidationMessages.pointer',
+  'QueryTransactionStatusResponse.result.notifications.notification',
+  'QueryTransactionStatusResponse.processsingResult.processingResult',
+  'QueryTransactionStatusResponse.processsingResult.processingResult.technicalValidationMessages',
+  'QueryTransactionStatusResponse.processsingResult.processingResult.businessValidationMessages',
+  'QueryTransactionStatusResponse.processsingResult.processingResult.businessValidationMessages.pointer',
 ];

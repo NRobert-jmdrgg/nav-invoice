@@ -5,7 +5,7 @@ import { createRequestSignature } from '../utils/createRequestSignature';
 import sendNavRequest from '../sendNavRequest';
 import { QueryTaxpayerResponse } from './types/response';
 import writeToXML from '../utils/writeToXML';
-import { fixKnownArrays } from '../utils/fixKnownArrays';
+// import { fixKnownArrays } from '../utils/fixKnownArrays';
 import { NaviOptions } from '../navi';
 
 /**
@@ -22,7 +22,7 @@ export default async function queryTaxpayerRequest(
   software: Software,
   props: QueryTaxpayerProps,
   options?: NaviOptions
-): Promise<QueryTaxpayerResponse | null> {
+): Promise<QueryTaxpayerResponse> {
   // request létrehozása
   const request = createRequest('QueryTaxpayerRequest', user, software, props);
   const requestId = request['QueryTaxpayerRequest']['common:header']['common:requestId'];
@@ -34,11 +34,20 @@ export default async function queryTaxpayerRequest(
     timestamp,
     user.signatureKey
   );
-
-  const response = await sendNavRequest<QueryTaxpayerResponse>(writeToXML(request), 'queryTaxpayer', options);
-  fixKnownArrays(response, knownArrays);
-
-  return response ?? null;
+  try {
+    const response = await sendNavRequest<QueryTaxpayerResponse>(
+      writeToXML(request),
+      'queryTaxpayer',
+      knownArrays,
+      options
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
 }
 
-const knownArrays = ['result.notifications.notification', 'taxpayerData.taxpayerAddressList.taxpayerAddressItem'];
+const knownArrays = [
+  'QueryTaxpayerResponse.result.notifications.notification',
+  'QueryTaxpayerResponse.taxpayerData.taxpayerAddressList.taxpayerAddressItem',
+];

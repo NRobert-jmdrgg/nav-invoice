@@ -9,7 +9,6 @@ import queryTaxpayerRequest from './operations/queryTaxpayer';
 import queryTransactionListRequest from './operations/queryTransactionList';
 import queryTransactionStatusRequest from './operations/queryTransactionStatus';
 import tokenExchangeRequest from './operations/tokenExchange';
-
 import {
   AdditionalQueryParams,
   annulmentOperation,
@@ -32,8 +31,8 @@ import {
   RequestStatus,
   TransactionQueryParams,
 } from './operations/types/requestProps';
-
 import readInvoiceData from './utils/readInvoiceData';
+
 export type NaviOptions = {
   returnWithXml?: boolean;
   testing?: boolean;
@@ -51,37 +50,43 @@ export class Navi {
   }
 
   private async tokenExchange() {
-    const response = await tokenExchangeRequest(this.user, this.software, this.options);
-
-    if (!response) {
-      throw new Error('Invalid exchange token');
+    try {
+      const response = await tokenExchangeRequest(this.user, this.software, this.options);
+      return response;
+    } catch (error) {
+      throw error;
     }
-
-    return response;
   }
 
   async manageAnnulment(annulmentOperations: annulmentOperation[]) {
-    const exchangeToken = await this.tokenExchange();
+    try {
+      const exchangeToken = await this.tokenExchange();
 
-    let manageAnnulmentOptions: ManageAnnulmentProps = {
-      exchangeToken: exchangeToken,
-      annulmentOperations: { annulmentOperation: annulmentOperations },
-    };
-    const response = await manageAnnulmentRequest(this.user, this.software, manageAnnulmentOptions, this.options);
-
-    return response;
+      let manageAnnulmentOptions: ManageAnnulmentProps = {
+        exchangeToken: exchangeToken,
+        annulmentOperations: { annulmentOperation: annulmentOperations },
+      };
+      const response = await manageAnnulmentRequest(this.user, this.software, manageAnnulmentOptions, this.options);
+      return response;
+    } catch (error) {
+      throw error;
+    }
   }
 
   async manageInvoice(compressedContent: boolean, invoiceOperation: InvoiceOperationObj[]) {
-    const exchangeToken = await this.tokenExchange();
+    try {
+      const exchangeToken = await this.tokenExchange();
 
-    let manageInvoiceOptions: ManageInvoiceProps = {
-      exchangeToken: exchangeToken,
-      invoiceOperations: { compressedContent, invoiceOperation },
-    };
+      let manageInvoiceOptions: ManageInvoiceProps = {
+        exchangeToken: exchangeToken,
+        invoiceOperations: { compressedContent, invoiceOperation },
+      };
 
-    const response = manageInvoiceRequest(this.user, this.software, manageInvoiceOptions, this.options);
-    return response;
+      const response = manageInvoiceRequest(this.user, this.software, manageInvoiceOptions, this.options);
+      return response;
+    } catch (error) {
+      throw error;
+    }
   }
 
   async queryInvoiceChainDigest(page: number, invoiceChainQuery: InvoiceChainQuery) {
@@ -90,24 +95,31 @@ export class Navi {
       invoiceChainQuery,
     };
 
-    const response = queryInvoiceChainDigestRequest(
-      this.user,
-      this.software,
-      queryInvoiceChainDigestOptions,
-      this.options
-    );
+    try {
+      const response = queryInvoiceChainDigestRequest(
+        this.user,
+        this.software,
+        queryInvoiceChainDigestOptions,
+        this.options
+      );
 
-    return response;
+      return response;
+    } catch (error) {
+      throw error;
+    }
   }
 
   async queryInvoiceCheck(invoiceNumberQuery: InvoiceNumberQuery) {
     let queryInvoiceCheckOptions: QueryInvoiceCheckProps = {
       invoiceNumberQuery,
     };
+    try {
+      const response = await queryInvoiceCheckRequest(this.user, this.software, queryInvoiceCheckOptions, this.options);
 
-    const response = await queryInvoiceCheckRequest(this.user, this.software, queryInvoiceCheckOptions, this.options);
-
-    return response;
+      return response;
+    } catch (error) {
+      throw error;
+    }
   }
 
   /**
@@ -133,13 +145,17 @@ export class Navi {
       },
     };
 
-    const response = await queryInvoiceDataRequest(this.user, this.software, queryInvoiceDataOptions, this.options);
-    let decryptedInvoiceData;
-    if (response?.invoiceDataResult) {
-      const { invoiceData, compressedContentIndicator } = response.invoiceDataResult;
-      decryptedInvoiceData = await readInvoiceData(invoiceData, compressedContentIndicator);
+    try {
+      const response = await queryInvoiceDataRequest(this.user, this.software, queryInvoiceDataOptions, this.options);
+      let decryptedInvoiceData;
+      if (response?.QueryInvoiceDataResponse.invoiceDataResult) {
+        const { invoiceData, compressedContentIndicator } = response.QueryInvoiceDataResponse.invoiceDataResult;
+        decryptedInvoiceData = await readInvoiceData(invoiceData, compressedContentIndicator);
+      }
+      return { ...response, decryptedInvoiceData };
+    } catch (error) {
+      throw error;
     }
-    return { ...response, decryptedInvoiceData };
   }
 
   async queryInvoiceDigest(
@@ -163,9 +179,13 @@ export class Navi {
       invoiceQueryParams,
     };
 
-    const response = queryInvoiceDigestRequest(this.user, this.software, queryInvoiceDigestOptions, this.options);
+    try {
+      const response = queryInvoiceDigestRequest(this.user, this.software, queryInvoiceDigestOptions, this.options);
 
-    return response;
+      return response;
+    } catch (error) {
+      throw error;
+    }
   }
 
   async queryTaxpayer(taxNumber: string) {
@@ -173,9 +193,13 @@ export class Navi {
       taxNumber,
     };
 
-    const response = await queryTaxpayerRequest(this.user, this.software, queryTaxpayerOptions, this.options);
+    try {
+      const response = await queryTaxpayerRequest(this.user, this.software, queryTaxpayerOptions, this.options);
 
-    return response;
+      return response;
+    } catch (error) {
+      throw error;
+    }
   }
 
   async queryTransactionList(page: number, dateTimeFrom: Date, dateTimeTo: Date, requestStatus?: RequestStatus) {
@@ -188,14 +212,18 @@ export class Navi {
       requestStatus,
     };
 
-    const response = await queryTransactionListRequest(
-      this.user,
-      this.software,
-      queryTransactionListOptions,
-      this.options
-    );
+    try {
+      const response = await queryTransactionListRequest(
+        this.user,
+        this.software,
+        queryTransactionListOptions,
+        this.options
+      );
 
-    return response;
+      return response;
+    } catch (error) {
+      throw error;
+    }
   }
 
   async queryTransactionStatus(transactionId: string, returnOriginalRequest?: boolean) {
@@ -204,13 +232,17 @@ export class Navi {
       returnOriginalRequest,
     };
 
-    const response = await queryTransactionStatusRequest(
-      this.user,
-      this.software,
-      queryTransactionStatusOptions,
-      this.options
-    );
+    try {
+      const response = await queryTransactionStatusRequest(
+        this.user,
+        this.software,
+        queryTransactionStatusOptions,
+        this.options
+      );
 
-    return response;
+      return response;
+    } catch (error) {
+      throw error;
+    }
   }
 }

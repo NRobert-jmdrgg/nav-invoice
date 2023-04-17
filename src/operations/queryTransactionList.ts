@@ -6,7 +6,7 @@ import sendNavRequest from '../sendNavRequest';
 import { QueryTransactionListResponse } from './types/response';
 import writeToXML from '../utils/writeToXML';
 import { OrderSchema, reOrder } from '../utils/reOrder';
-import { fixKnownArrays } from '../utils/fixKnownArrays';
+// import { fixKnownArrays } from '../utils/fixKnownArrays';
 import { NaviOptions } from '../navi';
 
 /**
@@ -23,7 +23,7 @@ export default async function queryTransactionListRequest(
   software: Software,
   props: QueryTransactionListProps,
   options?: NaviOptions
-): Promise<QueryTransactionListResponse | null> {
+): Promise<QueryTransactionListResponse> {
   reOrder(props, orderSchema);
 
   // request létrehozása
@@ -38,15 +38,18 @@ export default async function queryTransactionListRequest(
     user.signatureKey
   );
 
-  const response = await sendNavRequest<QueryTransactionListResponse>(
-    writeToXML(request),
-    'queryTransactionList',
-    options
-  );
+  try {
+    const response = await sendNavRequest<QueryTransactionListResponse>(
+      writeToXML(request),
+      'queryTransactionList',
+      knownArrays,
+      options
+    );
 
-  fixKnownArrays(response, knownArrays);
-
-  return response ?? null;
+    return response;
+  } catch (error) {
+    throw error;
+  }
 }
 
 const orderSchema: OrderSchema[] = [
@@ -60,5 +63,8 @@ const orderSchema: OrderSchema[] = [
   },
 ];
 
-const knownArrays = ['result.notifications.notification', 'transactionListResult.transaction'];
+const knownArrays = [
+  'QueryTransactionListResponse.result.notifications.notification',
+  'QueryTransactionListResponse.transactionListResult.transaction',
+];
 0;
