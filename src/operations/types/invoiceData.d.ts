@@ -101,12 +101,7 @@ export type FiscalRepresentativeInfoType = {
 
 export type InvoiceCategoryType = 'NORMAL' | 'SIMPLIFIED' | 'AGGREGATE';
 
-export type PaymentMethodType =
-  | 'TRANSFER'
-  | 'CASH'
-  | 'CARD'
-  | 'VOUCHER'
-  | 'OTHER';
+export type PaymentMethodType = 'TRANSFER' | 'CASH' | 'CARD' | 'VOUCHER' | 'OTHER';
 
 export type InvoiceAppearanceType = 'PAPER' | 'ELECTRONIC' | 'EDI' | 'UNKNOWN';
 
@@ -173,11 +168,7 @@ export type VatOutOfScopeType = {
   reason: string; // Az Áfa tv.hatályán kívüliség leírása;
 };
 
-export type MarginSchemeType =
-  | 'TRAVEL_AGENCY'
-  | 'SECOND_HAND'
-  | 'ARTWORK'
-  | 'ANTIQUES';
+export type MarginSchemeType = 'TRAVEL_AGENCY' | 'SECOND_HAND' | 'ARTWORK' | 'ANTIQUES';
 
 export type VatAmountMismatchType = {
   vatRate: string; // Adómérték, adótartalom
@@ -296,16 +287,7 @@ export type LineAmountsSimplified = {
 
 export type ProductCodeType = {
   productCodeCategory: // A termékkód értéke nem saját termékkód esetén
-  | 'VTSZ'
-    | 'SZJ'
-    | 'KN'
-    | 'AHK'
-    | 'CSK'
-    | 'KT'
-    | 'EJ'
-    | 'TESZOR'
-    | 'OWN'
-    | 'OTHER';
+  'VTSZ' | 'SZJ' | 'KN' | 'AHK' | 'CSK' | 'KT' | 'EJ' | 'TESZOR' | 'OWN' | 'OTHER';
 
   productCodeValue?: string; //  A termékkód értéke
   productCodeOwnValue?: string; // Saját termékkód értéke
@@ -461,8 +443,10 @@ export type InvoiceMainType = {
 };
 
 export type InvoiceData = {
-  invoiceNumber: string; // Számla vagy módosító okirat sorszáma;
-  invoiceIssueDate: Date; // Számla vagy módosító okirat kelte
-  completenessIndicator: boolean; // Jelöli, ha az adatszolgáltatás maga a számla
-  invoiceMain: InvoiceMainType;
+  InvoiceData: {
+    invoiceNumber: string; // Számla vagy módosító okirat sorszáma;
+    invoiceIssueDate: Date; // Számla vagy módosító okirat kelte
+    completenessIndicator: boolean; // Jelöli, ha az adatszolgáltatás maga a számla
+    invoiceMain: InvoiceMainType;
+  };
 };
