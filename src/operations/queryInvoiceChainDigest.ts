@@ -64,6 +64,6 @@ const orderSchema: OrderSchema[] = [
 
 const knownArrays = [
   'QueryInvoiceChainDigestResponse.result.notifications.notification',
-  'QueryInvoiceChainDigestResponse.InvoiceChainDigestResult.invoiceChainElement',
-  'QueryInvoiceChainDigestResponse.InvoiceChainDigestResult.invoiceChainElement.invoiceLines.newCreatedLines',
+  'QueryInvoiceChainDigestResponse.invoiceChainDigestResult.invoiceChainElement',
+  'QueryInvoiceChainDigestResponse.invoiceChainDigestResult.invoiceChainElement.invoiceLines.newCreatedLines',
 ];
