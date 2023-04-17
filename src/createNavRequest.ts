@@ -32,10 +32,9 @@ export default function createNavRequest(requestName: string, user: User, softwa
 
   return {
     [requestName]: {
-      $: {
-        'xmlns:common': 'http://schemas.nav.gov.hu/NTCA/1.0/common',
-        xmlns: 'http://schemas.nav.gov.hu/OSA/3.0/api',
-      },
+      '$xmlns:common': 'http://schemas.nav.gov.hu/NTCA/1.0/common',
+      $xmlns: 'http://schemas.nav.gov.hu/OSA/3.0/api',
+
       'common:header': {
         'common:requestId': makeid(16),
         'common:timestamp': new Date().toISOString(),
@@ -45,16 +44,12 @@ export default function createNavRequest(requestName: string, user: User, softwa
       'common:user': {
         'common:login': user.login,
         'common:passwordHash': {
-          $: {
-            cryptoType: 'SHA-512',
-          },
+          $cryptoType: 'SHA-512',
           _: createHash('sha512').update(user.password).digest('hex').toUpperCase(),
         },
         'common:taxNumber': user.taxNumber,
         'common:requestSignature': {
-          $: {
-            cryptoType: 'SHA3-512',
-          },
+          $cryptoType: 'SHA3-512',
           _: '',
         },
       },

@@ -10,26 +10,32 @@ export type xml = {
 };
 
 export type TokenExchangeResponse = {
-  header: BasicHeader;
-  result: BasicResult;
-  software: Software;
-  encodedExchangeToken: string; // Az elkódolt adatszolgáltatási token
-  tokenValidityFrom: Date; //  Az adatszolgáltatási token érvényességének kezdete
-  tokenValidityTo: Date; // Az adatszolgáltatási token érvényességének vége
+  TokenExchangeResponse: {
+    header: BasicHeader;
+    result: BasicResult;
+    software: Software;
+    encodedExchangeToken: string; // Az elkódolt adatszolgáltatási token
+    tokenValidityFrom: Date; //  Az adatszolgáltatási token érvényességének kezdete
+    tokenValidityTo: Date; // Az adatszolgáltatási token érvényességének vége
+  };
 } & xml;
 
 export type ManageAnnulmentResponse = {
-  header: BasicHeader;
-  result: BasicResult;
-  software: Software;
-  transactionId: string; // A befogadott adatszolgáltatás azonosítója
+  ManageAnnulmentResponse: {
+    header: BasicHeader;
+    result: BasicResult;
+    software: Software;
+    transactionId: string; // A befogadott adatszolgáltatás azonosítója
+  };
 } & xml;
 
 export type ManageInvoiceResponse = {
-  header: BasicHeader;
-  result: BasicResult;
-  software: Software;
-  transactionId: string; // A befogadott adatszolgáltatás azonosítója
+  ManageInvoiceResponse: {
+    header: BasicHeader;
+    result: BasicResult;
+    software: Software;
+    transactionId: string; // A befogadott adatszolgáltatás azonosítója
+  };
 } & xml;
 
 export type InvoiceChainDigestType = {
@@ -62,40 +68,46 @@ export type InvoiceChainElementType = {
 };
 
 export type QueryInvoiceChainDigestResponse = {
-  header: BasicHeader;
-  result: BasicResult;
-  software: Software;
-  InvoiceChainDigestResult: {
-    currentPage: number; // A jelenleg lekérdezett lap értéke
-    availablePage: number; // Az elérhető legnagyobb lap értéke
-    invoiceChainElement: InvoiceChainElementType[];
+  QueryInvoiceChainDigestResponse: {
+    header: BasicHeader;
+    result: BasicResult;
+    software: Software;
+    InvoiceChainDigestResult: {
+      currentPage: number; // A jelenleg lekérdezett lap értéke
+      availablePage: number; // Az elérhető legnagyobb lap értéke
+      invoiceChainElement: InvoiceChainElementType[];
+    };
   };
 } & xml;
 
 export type QueryInvoiceCheckResponse = {
-  header: BasicHeader;
-  result: BasicResult;
-  software: Software;
-  invoiceCheckResult: boolean; // Az ellenőrzés logikai értékét tartalmazza
+  QueryInvoiceCheckResponse: {
+    header: BasicHeader;
+    result: BasicResult;
+    software: Software;
+    invoiceCheckResult: boolean; // Az ellenőrzés logikai értékét tartalmazza
+  };
 } & xml;
 
 export type QueryInvoiceDataResponse = {
-  header: BasicHeader;
-  result: BasicResult;
-  software: Software;
-  invoiceDataResult?: {
-    invoiceData: string; // A számla adatai BASE64 kódolásban;
-    auditData: {
-      insDate: Date; // A számlaadat-szolgáltatás mentésének időpontja
-      insCusUser: string; // A számlaadat-szolgáltatást beküldő technikai felhasználó neve
-      source: string; // A számlaadat-szolgáltatás forrása
-      transactionId?: string; // A számlaadat-szolgáltatás tranzakcióazonosítója, ha az gépi interfészen került beküldésre
-      index?: number; //  A számlaadat-szolgáltatás tranzakciójának indexe
-      batchIndex?: number; // A módosító okirat száma a kötegen belül
-      originalRequestVersion: string; // Az adatszolgáltatás requestVersion értéke
+  QueryInvoiceDataResponse: {
+    header: BasicHeader;
+    result: BasicResult;
+    software: Software;
+    invoiceDataResult?: {
+      invoiceData: string; // A számla adatai BASE64 kódolásban;
+      auditData: {
+        insDate: Date; // A számlaadat-szolgáltatás mentésének időpontja
+        insCusUser: string; // A számlaadat-szolgáltatást beküldő technikai felhasználó neve
+        source: string; // A számlaadat-szolgáltatás forrása
+        transactionId?: string; // A számlaadat-szolgáltatás tranzakcióazonosítója, ha az gépi interfészen került beküldésre
+        index?: number; //  A számlaadat-szolgáltatás tranzakciójának indexe
+        batchIndex?: number; // A módosító okirat száma a kötegen belül
+        originalRequestVersion: string; // Az adatszolgáltatás requestVersion értéke
+      };
+      compressedContentIndicator: boolean; // Jelöli, ha az invoiceData tartalmát a BASE64 dekódolást követően még ki kell tömöríteni az olvasáshoz
+      electronicInvoiceHash?: string; // Elektronikus számla- vagy módosító okirat állomány hash-lenyomata
     };
-    compressedContentIndicator: boolean; // Jelöli, ha az invoiceData tartalmát a BASE64 dekódolást követően még ki kell tömöríteni az olvasáshoz
-    electronicInvoiceHash?: string; // Elektronikus számla- vagy módosító okirat állomány hash-lenyomata
   };
 } & xml;
 
@@ -130,13 +142,15 @@ export type InvoiceDigestType = {
 };
 
 export type QueryInvoiceDigestResponse = {
-  header: BasicHeader;
-  result: BasicResult;
-  software: Software;
-  invoiceDigestResult: {
-    currentPage: number; // A jelenleg lekérdezett lap értéke;
-    availablePage: number; // Az elérhető legnagyobb lap értéke
-    invoiceDigest?: InvoiceDigestType[];
+  QueryInvoiceDigestResponse: {
+    header: BasicHeader;
+    result: BasicResult;
+    software: Software;
+    invoiceDigestResult: {
+      currentPage: number; // A jelenleg lekérdezett lap értéke;
+      availablePage: number; // Az elérhető legnagyobb lap értéke
+      invoiceDigest?: InvoiceDigestType[];
+    };
   };
 } & xml;
 
@@ -152,13 +166,15 @@ export type TransactionType = {
 };
 
 export type QueryTransactionListResponse = {
-  header: BasicHeader;
-  result: BasicResult;
-  software: Software;
-  transactionListResult: {
-    currentPage: number; // A jelenleg lekérdezett lap értéke
-    availablePage: number; // Az elérhető legnagyobb lap értéke
-    transaction?: TransactionType[];
+  QueryTransactionListResponse: {
+    header: BasicHeader;
+    result: BasicResult;
+    software: Software;
+    transactionListResult: {
+      currentPage: number; // A jelenleg lekérdezett lap értéke
+      availablePage: number; // Az elérhető legnagyobb lap értéke
+      transaction?: TransactionType[];
+    };
   };
 } & xml;
 
@@ -193,16 +209,18 @@ export type ProcessingResultType = {
 };
 
 export type QueryTransactionStatusResponse = {
-  header: BasicHeader;
-  result: BasicResult;
-  software: Software;
-  processsingResult?: {
-    processingResult: ProcessingResultType[];
-    originalRequestVersion: string; // Az adatszolgáltatás; requestVersion értéke;
-    annulmentData?: {
-      annulmentVerificationStatus: string; // A technikai érvénytelenítő kérések jóváhagyási státusza
-      annulmentDecisionDate?: Date; // A technikai érvénytelenítés jóváhagyásának vagy elutasításának időpontja UTC időben
-      annulmentDecisionUser?: string; // A technikai érvénytelenítést jóváhagyó vagy elutasító felhasználó neve
+  QueryTransactionStatusResponse: {
+    header: BasicHeader;
+    result: BasicResult;
+    software: Software;
+    processsingResult?: {
+      processingResult: ProcessingResultType[];
+      originalRequestVersion: string; // Az adatszolgáltatás; requestVersion értéke;
+      annulmentData?: {
+        annulmentVerificationStatus: string; // A technikai érvénytelenítő kérések jóváhagyási státusza
+        annulmentDecisionDate?: Date; // A technikai érvénytelenítés jóváhagyásának vagy elutasításának időpontja UTC időben
+        annulmentDecisionUser?: string; // A technikai érvénytelenítést jóváhagyó vagy elutasító felhasználó neve
+      };
     };
   };
 } & xml;
@@ -226,24 +244,26 @@ export type TaxpayerAddressItemType = {
 };
 
 export type QueryTaxpayerResponse = {
-  header: BasicHeader;
-  result: BasicResult;
-  software: Software;
-  infoDate?: Date; // A lekérdezett adószám utolsó változásának időpontja
-  taxpayerValidity?: boolean; // A lekérdezett adószám érvényességének státusza (ha az adószám létezik)
-  taxpayerData?: {
-    taxpayerName: string; // A lekérdezett adózó neve
-    taxpayerShortName?: string; // Az adózó rövid neve;
-    taxNumberDetail: {
-      taxpayerId: string; //Az adóalany adó törzsszáma;
-      vatCode?: string; // Áfakód az adóalanyiság típusának jelzésére
-      countyCode?: string; // Megyekód
-    };
+  QueryTaxpayerResponse: {
+    header: BasicHeader;
+    result: BasicResult;
+    software: Software;
+    infoDate?: Date; // A lekérdezett adószám utolsó változásának időpontja
+    taxpayerValidity?: boolean; // A lekérdezett adószám érvényességének státusza (ha az adószám létezik)
+    taxpayerData?: {
+      taxpayerName: string; // A lekérdezett adózó neve
+      taxpayerShortName?: string; // Az adózó rövid neve;
+      taxNumberDetail: {
+        taxpayerId: string; //Az adóalany adó törzsszáma;
+        vatCode?: string; // Áfakód az adóalanyiság típusának jelzésére
+        countyCode?: string; // Megyekód
+      };
 
-    incorporation: string; // Gazdasági típus
-    vatGroupMembership?: string; // Az adózó áfacsoport tagsága
-    taxpayerAddressList?: {
-      taxpayerAddressItem: TaxpayerAddressItemType[];
+      incorporation: string; // Gazdasági típus
+      vatGroupMembership?: string; // Az adózó áfacsoport tagsága
+      taxpayerAddressList?: {
+        taxpayerAddressItem: TaxpayerAddressItemType[];
+      };
     };
   };
 } & xml;

@@ -1,26 +1,23 @@
-import { Builder, BuilderOptions } from 'xml2js';
+import { XMLBuilder } from 'fast-xml-parser';
 
 /**
  * Tetszőleges object kiírása xml-be
  * @param obj tetszőleges object
- * @param rootname root neve
- * @param removeNil undefined vagy null értékeket ne írja bele
  * @returns xml dokumentum string
  */
-export default function writeToXML(obj: any, rootname?: string, removeNil = true): string {
-  let options: BuilderOptions = {};
+export default function writeToXML(obj: any): string {
+  obj = removeNull(obj);
 
-  if (rootname) {
-    options.rootName = rootname;
-  }
+  const xmlBuilder = new XMLBuilder({
+    format: true,
+    ignoreAttributes: false,
+    attributeNamePrefix: '$',
+    textNodeName: '_',
+  });
 
-  if (removeNil) {
-    obj = removeNull(obj);
-  }
+  const xml = xmlBuilder.build(obj);
 
-  const xmlBuilder = new Builder(options);
-
-  return xmlBuilder.buildObject(obj);
+  return xml;
 }
 
 function removeNull(obj: any): any {

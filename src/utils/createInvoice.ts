@@ -22,16 +22,15 @@ export default function createInvoice(
   porductFeeSummary?.forEach((pfs) => reOrder(pfs, productFeeSUmmaryOrderSchema));
   reOrder(invoiceSummary, invoiceSummaryOrderSchema);
 
-  const xml = writeToXML(
-    {
+  const xml = writeToXML({
+    InvoiceData: {
       invoiceReference: invoiceReference,
       invoiceHead: invoiceHead,
       invoiceLines: invoiceLines,
       productFeeSummary: porductFeeSummary,
       invoiceSummary: invoiceSummary,
     },
-    'InvoiceData'
-  );
+  });
 
   return utf8ToBase64(xml);
 }

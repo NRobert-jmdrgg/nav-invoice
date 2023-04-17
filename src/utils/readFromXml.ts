@@ -1,4 +1,5 @@
-import { Parser, processors } from 'xml2js';
+// import { Parser, processors } from 'xml2js';
+import { XMLParser } from 'fast-xml-parser';
 
 /**
  * Olvasás XML fájlból
@@ -7,21 +8,18 @@ import { Parser, processors } from 'xml2js';
  * @param explicitArray értékeket tömbben adja-e vissza
  * @returns js object.
  */
-export default async function readFromXml<R>(
-  xml: string,
-  explicitRoot: boolean = false,
-  explicitArray: boolean = false,
-  removeNamespaces: boolean = true
-): Promise<R> {
-  const stripPrefix = processors.stripPrefix;
-  const parser = new Parser({
-    explicitRoot: explicitRoot,
-    explicitArray: explicitArray,
-    tagNameProcessors: removeNamespaces ? [stripPrefix] : undefined,
-    attrNameProcessors: removeNamespaces ? [stripPrefix] : undefined,
+export default function readFromXml<R>(xml: string, knownArrays: string[]): Promise<R> {
+  const parser = new XMLParser({
+    removeNSPrefix: true,
+    isArray: (name, jpath, isLeafNode, isAttribute) => knownArrays.indexOf(jpath) !== -1,
   });
 
-  const result = await parser.parseStringPromise(xml);
-
-  return result;
+  return new Promise((resolve, reject) => {
+    try {
+      const result = parser.parse(xml) as R;
+      resolve(result);
+    } catch (e) {
+      reject(e);
+    }
+  });
 }
