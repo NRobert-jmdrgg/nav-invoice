@@ -1,7 +1,7 @@
 import { InvoiceData } from '../operations/types/invoiceData';
-import { gunzip } from 'zlib';
 import readFromXml from './readFromXml';
 import { base64ToUtf8 } from './base64';
+import { uncompressData } from './gzip';
 // import { fixKnownArrays } from './fixKnownArrays';
 
 /**
@@ -13,7 +13,7 @@ import { base64ToUtf8 } from './base64';
 export default async function readInvoiceData(data: string, compressed = false): Promise<InvoiceData> {
   try {
     if (compressed) {
-      data = await uncompressData(Buffer.from(data, 'base64'));
+      data = uncompressData(Buffer.from(data, 'base64'));
     } else {
       data = base64ToUtf8(data);
     }
@@ -23,23 +23,6 @@ export default async function readInvoiceData(data: string, compressed = false):
     return invoiceData;
   } catch (error) {
     throw error;
-  }
-}
-
-async function uncompressData(compressedData: Buffer): Promise<string> {
-  try {
-    const uncompressedData = await new Promise<Buffer>((resolve, reject) => {
-      gunzip(compressedData, (err, result) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(result);
-        }
-      });
-    });
-    return uncompressedData.toString();
-  } catch (err) {
-    throw err;
   }
 }
 
