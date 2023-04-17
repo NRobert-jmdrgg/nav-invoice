@@ -74,8 +74,8 @@ export type InvoiceIssueDate = {
 };
 
 export type DateTimeIntervalParamType = {
-  dateTimeFrom: Date; // Számla feldolgozásának időbélyeges, nagyobb vagy egyenlő keresőparamétere UTC idő szerint
-  dateTimeTo: Date; // Számla feldolgozásának időbélyeges, kisebb vagy egyenlő keresőparamétere UTC idő szerint
+  dateTimeFrom: string; // Számla feldolgozásának időbélyeges, nagyobb vagy egyenlő keresőparamétere UTC idő szerint
+  dateTimeTo: string; // Számla feldolgozásának időbélyeges, kisebb vagy egyenlő keresőparamétere UTC idő szerint
 };
 
 export type MandatoryQueryParams =
