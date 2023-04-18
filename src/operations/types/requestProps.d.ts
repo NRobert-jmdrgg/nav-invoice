@@ -2,7 +2,7 @@
  * Operáció opció típusok
  */
 
-export type annulmentOperation = {
+export type AnnulmentOperation = {
   index: number; // A technikai érvénytelenítés pozíciója a kérésen belül
   annulmentOperation: 'ANNUL'; // A kért technikai érvénytelenítési művelet megjelölése
   invoiceAnnulment: string; // A technikai érvénytelenítés adatai BASE64 kódolásban
@@ -11,20 +11,27 @@ export type annulmentOperation = {
 export type ManageAnnulmentProps = {
   exchangeToken: string; // Adatszolgáltatási token (tokenExchange)
   annulmentOperations: {
-    annulmentOperation: annulmentOperation[];
+    annulmentOperation: AnnulmentOperation[];
   };
 };
 
 type InvoiceOperation = 'CREATE' | 'MODIFY' | 'STORNO';
+
+type Crypto = 'SHA3-512' | 'SHA-256';
+
+type ElectronicInvoiceHash = {
+  $cryptoType: Crypto;
+  _: string;
+};
 
 export type InvoiceOperationObj = {
   index: number; // A számla pozíciója a kérésen belül
   invoiceOperation: InvoiceOperation; // A számlaművelet megjelölése
   invoiceData: string; // A számla adatai BASE64 kódolásban
   // Számlaállomány hash-lenyomata
-  // Ha a completenessIndicator értéke true, az egyetlen elfogadott érték az SHA3-512.
-  // Ha a completenessIndicator jelölő értéke false, az elfogadott értékek: SHA3-512, SHA-256.
-  electronicInvoiceHash?: string;
+  // Ha a completenessIndicator értéke true, a cryptoType attributum egyetlen elfogadott érték az SHA3-512.
+  // Ha a completenessIndicator jelölő értéke false, az attributum elfogadott értékek: SHA3-512, SHA-256.
+  electronicInvoiceHash?: ElectronicInvoiceHash;
 };
 
 export type ManageInvoiceProps = {

@@ -65,7 +65,7 @@ export type AdditionalDataType = {
   dataValue: string; // Az adat értéke
 };
 
-export type invoiceReferenceType = {
+export type InvoiceReferenceType = {
   originalInvoiceNumber: string; // Az eredeti számla sorszáma, melyre a módosítás vonatkozik
   modifyWithoutMaster: boolean; // Annak jelzése, hogy a módosítás olyan alapszámlára hivatkozik, amelyről nem történt és nem is fog történni adatszolgáltatás
   modificationIndex: number; // A számlára vonatkozó módosító okirat egyedi sorszáma
@@ -107,10 +107,10 @@ export type InvoiceAppearanceType = 'PAPER' | 'ELECTRONIC' | 'EDI' | 'UNKNOWN';
 
 export type InvoiceDetailType = {
   invoiceCategory: InvoiceCategoryType; // A számla típusa, módosító okirat esetén az eredeti számla típusa
-  invoiceDeliveryDate: Date; // Teljesítés dátuma (ha nem szerepel a számlán, akkor azonos a számla keltével)
-  invoiceDeliveryPeriodStart?: Date; // Ha a számla egy időszakra vonatkozik, akkor az időszak első napja
-  invoiceDeliveryPeriodEnd?: Date; // Ha a számla egy időszakra vonatkozik, akkor az időszak utolsó napja
-  invoiceAccountingDeliveryDate?: Date; // Számviteli teljesítés dátuma. Időszak esetén az időszak utolsó napja
+  invoiceDeliveryDate: string; // Teljesítés dátuma (ha nem szerepel a számlán, akkor azonos a számla keltével)
+  invoiceDeliveryPeriodStart?: string; // Ha a számla egy időszakra vonatkozik, akkor az időszak első napja
+  invoiceDeliveryPeriodEnd?: string; // Ha a számla egy időszakra vonatkozik, akkor az időszak utolsó napja
+  invoiceAccountingDeliveryDate?: string; // Számviteli teljesítés dátuma. Időszak esetén az időszak utolsó napja
   periodicalSettlement?: boolean; // Időszakos elszámolás jelzése
   smallBusinessIndicator?: boolean; // Kisadózó jelzése
   currencyCode: string; // A számla pénzneme az ISO 4217 szabvány szerint
@@ -118,7 +118,7 @@ export type InvoiceDetailType = {
   utilitySettlementIndicator?: boolean; // Közmű elszámolószámla jelölése
   selfBillingIndicator?: boolean; // Önszámlázás jelölése (önszámlázás esetén true)
   paymentMethod?: PaymentMethodType; // Fizetés módja
-  paymentDate?: Date; // Fizetési határidő
+  paymentDate?: string; // Fizetési határidő
   cashAccountingIndicator?: boolean; // Pénzforgalmi elszámolás jelölése, ha az szerepel a számlán
   invoiceAppearance: InvoiceAppearanceType; // A számla vagy módosító okirat megjelenési formája
   conventionalInvoiceInfo?: ConventionalInvoiceInfoType; // A számlafeldolgozást segítő, egyezményesen nevesített egyéb adatok
@@ -208,7 +208,7 @@ export type NewTransportMeanType = {
   brand?: string; // Gyártmány/típus
   serialNum?: string; // Alvázszám/gyári szám/Gyártási szám;
   engineNum?: string; // Motorszám
-  firstEntryIntoService?: Date; // Első forgalomba helyezés időpontja
+  firstEntryIntoService?: string; // Első forgalomba helyezés időpontja
   vehicle?: {
     engineCapacity: number; // Hengerűrtartalom köbcentiméterben
     enginePower: number; // Teljesítmény kW-ban
@@ -269,14 +269,14 @@ export type ProductFeeClauseType = {
 
 export type DieselOilPurchaseType = {
   purchaseLocation: SimpleAddressType; // Gázolaj beszerzés helye
-  purchaseDate: Date; // Gázolaj beszerzés dátuma
+  purchaseDate: string; // Gázolaj beszerzés dátuma
   vehicleRegistrationNumber: string; // Kereskedelmi jármű forgalmi rendszáma (csak betűk és számok
   dieselOilQuantity?: number; // Gépi bérmunka-szolgáltatás közben felhasznált gázolaj mennyisége literben
 };
 
 export type AggregateInvoiceLineData = {
   lineExchangeRate?: number; // A tételhez tartozó árfolyam, 1 (egy) egységre vonatkoztatva. Csak külföldi pénznemben kiállított gyűjtőszámla esetén kitöltendő
-  lineDeliveryDate: Date; // Gyűjtőszámla esetén az adott tétel teljesítési dátuma
+  lineDeliveryDate: string; // Gyűjtőszámla esetén az adott tétel teljesítési dátuma
 };
 
 export type LineAmountsSimplified = {
@@ -417,7 +417,7 @@ export type ProductFeeSummaryType = {
   PaymentEvidenceDocumentData?: // A termékdíj bevallását igazoló dokumentum adatai a 2011. évi
   {
     evidenceDocumentNo: string; // Számla sorszáma vagy egyéb okirat azonosító száma
-    evidenceDocumentDate: Date; // Számla kelte
+    evidenceDocumentDate: string; // Számla kelte
     obligatedName: string; // Kötelezett neve
     obligatedAddress: AddressType; // Kötelezett címe
     obligatedTaxNumber: TaxNumberType; // A kötelezett adószáma
@@ -425,7 +425,7 @@ export type ProductFeeSummaryType = {
 };
 
 export type InvoiceType = {
-  invoiceReference?: invoiceReferenceType;
+  invoiceReference?: InvoiceReferenceType;
   invoiceHead: InvoiceHeadType;
   invoiceLines?: LinesType;
   productFeeSummary?: ProductFeeSummaryType[];
@@ -437,16 +437,25 @@ export type BatchInvoiceType = {
   invoice: InvoiceType;
 };
 
-export type InvoiceMainType = {
-  invoice?: InvoiceType;
-  batchInvoice?: BatchInvoiceType[];
+export type InvoiceMainType =
+  | ({ invoice: InvoiceType } & { batchInvoice?: never })
+  | ({ batchInvoice: BatchInvoiceType[] } & { invoice?: never });
+
+type Namespaces = {
+  '$xsi:schemaLocation': 'http://schemas.nav.gov.hu/OSA/3.0/data invoiceData.xsd';
+  $xmlns: 'http://schemas.nav.gov.hu/OSA/3.0/data';
+  '$xmlns:xsi': 'http://www.w3.org/2001/XMLSchema-instance';
+  '$xmlns:common': 'http://schemas.nav.gov.hu/NTCA/1.0/common';
+  '$xmlns:base': 'http://schemas.nav.gov.hu/OSA/3.0/base';
 };
 
+export type InvoiceDataProps = {
+  invoiceNumber: string; // Számla vagy módosító okirat sorszáma;
+  invoiceIssueDate: string; // Számla vagy módosító okirat kelte
+  completenessIndicator: boolean; // Jelöli, ha az adatszolgáltatás maga a számla
+  invoiceMain: InvoiceMainType;
+} & Namespaces;
+
 export type InvoiceData = {
-  InvoiceData: {
-    invoiceNumber: string; // Számla vagy módosító okirat sorszáma;
-    invoiceIssueDate: Date; // Számla vagy módosító okirat kelte
-    completenessIndicator: boolean; // Jelöli, ha az adatszolgáltatás maga a számla
-    invoiceMain: InvoiceMainType;
-  };
+  InvoiceData: InvoiceDataProps;
 };

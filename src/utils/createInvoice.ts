@@ -1,38 +1,49 @@
-import {
-  invoiceReferenceType,
-  InvoiceHeadType,
-  LinesType,
-  ProductFeeSummaryType,
-  InvoiceSummaryType,
-} from '../operations/types/invoiceData';
-import writeToXML from './writeToXML';
-import { utf8ToBase64 } from './base64';
+import { InvoiceData, InvoiceMainType, InvoiceType } from '../operations/types/invoiceData';
 import { OrderSchema, reOrder } from './reOrder';
 
 export default function createInvoice(
-  invoiceHead: InvoiceHeadType,
-  invoiceSummary: InvoiceSummaryType,
-  invoiceReference?: invoiceReferenceType,
-  invoiceLines?: LinesType,
-  porductFeeSummary?: ProductFeeSummaryType[]
-): string {
-  reOrder(invoiceReference, invoiceReferenceOrderSchema);
-  reOrder(invoiceHead, invoiceHeadOrderSchema);
-  reOrder(invoiceLines, invoiceLinesOrderSchema);
-  porductFeeSummary?.forEach((pfs) => reOrder(pfs, productFeeSUmmaryOrderSchema));
-  reOrder(invoiceSummary, invoiceSummaryOrderSchema);
+  invoiceNumber: string,
+  invoiceIssueDate: string,
+  completenessIndicator: boolean,
+  invoices: InvoiceType[]
+): InvoiceData {
+  invoices.forEach((invoice) => fixInvoice(invoice));
 
-  const xml = writeToXML({
+  let invoiceMain: InvoiceMainType;
+  if (invoices.length > 1) {
+    invoiceMain = {
+      batchInvoice: invoices.map((invoice, index) => {
+        return {
+          batchIndex: index + 1,
+          invoice: invoice,
+        };
+      }),
+    };
+  } else {
+    invoiceMain = { invoice: invoices[0] };
+  }
+
+  return {
     InvoiceData: {
-      invoiceReference: invoiceReference,
-      invoiceHead: invoiceHead,
-      invoiceLines: invoiceLines,
-      productFeeSummary: porductFeeSummary,
-      invoiceSummary: invoiceSummary,
+      $xmlns: 'http://schemas.nav.gov.hu/OSA/3.0/data',
+      '$xmlns:xsi': 'http://www.w3.org/2001/XMLSchema-instance',
+      '$xsi:schemaLocation': 'http://schemas.nav.gov.hu/OSA/3.0/data invoiceData.xsd',
+      '$xmlns:common': 'http://schemas.nav.gov.hu/NTCA/1.0/common',
+      '$xmlns:base': 'http://schemas.nav.gov.hu/OSA/3.0/base',
+      invoiceNumber,
+      invoiceIssueDate,
+      completenessIndicator,
+      invoiceMain,
     },
-  });
+  };
+}
 
-  return utf8ToBase64(xml);
+function fixInvoice(invoice: InvoiceType) {
+  reOrder(invoice.invoiceReference, invoiceReferenceOrderSchema);
+  reOrder(invoice.invoiceHead, invoiceHeadOrderSchema);
+  reOrder(invoice.invoiceLines, invoiceLinesOrderSchema);
+  invoice.productFeeSummary?.forEach((pfs) => reOrder(pfs, productFeeSUmmaryOrderSchema));
+  reOrder(invoice.invoiceSummary, invoiceSummaryOrderSchema);
 }
 
 const taxNumberTypeOrder = ['taxpayerId', 'vatCode', 'countyCode'];

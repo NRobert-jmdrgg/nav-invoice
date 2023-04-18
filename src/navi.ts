@@ -9,9 +9,10 @@ import queryTaxpayerRequest from './operations/queryTaxpayer';
 import queryTransactionListRequest from './operations/queryTransactionList';
 import queryTransactionStatusRequest from './operations/queryTransactionStatus';
 import tokenExchangeRequest from './operations/tokenExchange';
+import { InvoiceAnnulmentParams } from './operations/types/invoiceAnnulment';
 import {
   AdditionalQueryParams,
-  annulmentOperation,
+  AnnulmentOperation,
   InvoiceChainQuery,
   InvoiceDirection,
   InvoiceNumberQuery,
@@ -31,7 +32,10 @@ import {
   RequestStatus,
   TransactionQueryParams,
 } from './operations/types/requestProps';
+import createInvoiceAnnulment from './utils/createInvoiceAnnulment';
+import createInvoiceOperation, { InvoiceOperationProps } from './utils/createInvoiceOperation';
 import readInvoiceData from './utils/readInvoiceData';
+import createInvoice from './utils/createInvoice';
 
 export type NaviOptions = {
   returnWithXml?: boolean;
@@ -42,6 +46,7 @@ export class Navi {
   private user: User;
   private software: Software;
   private options?: NaviOptions;
+  static createInvoice = createInvoice;
 
   constructor(user: User, software: Software, options?: NaviOptions) {
     this.user = user;
@@ -58,7 +63,24 @@ export class Navi {
     }
   }
 
-  async manageAnnulment(annulmentOperations: annulmentOperation[]) {
+  async manageAnnulment(invoiceAnnulments: InvoiceAnnulmentParams[]) {
+    if (invoiceAnnulments.length > 100) {
+      throw new Error('The number of manageAnnulment operations cannot exceed 100');
+    }
+
+    const annulmentOperations: AnnulmentOperation[] = invoiceAnnulments.map((ia, index) => {
+      return {
+        index: index + 1,
+        annulmentOperation: 'ANNUL',
+        invoiceAnnulment: createInvoiceAnnulment(
+          ia.annulmentReference,
+          ia.annulmentTimestamp,
+          ia.annulmentCode,
+          ia.annulmentReason
+        ),
+      };
+    });
+
     try {
       const exchangeToken = await this.tokenExchange();
 
@@ -73,13 +95,22 @@ export class Navi {
     }
   }
 
-  async manageInvoice(compressedContent: boolean, invoiceOperation: InvoiceOperationObj[]) {
+  async manageInvoice(compressedContent: boolean, operations: InvoiceOperationProps[]) {
+    if (operations.length > 100) {
+      throw new Error('The number of manageInvoice operations cannot exceed 100');
+    }
+
     try {
       const exchangeToken = await this.tokenExchange();
 
-      let manageInvoiceOptions: ManageInvoiceProps = {
-        exchangeToken: exchangeToken,
-        invoiceOperations: { compressedContent, invoiceOperation },
+      const invoiceOperation: InvoiceOperationObj[] = createInvoiceOperation(compressedContent, operations);
+
+      const manageInvoiceOptions: ManageInvoiceProps = {
+        exchangeToken,
+        invoiceOperations: {
+          compressedContent,
+          invoiceOperation,
+        },
       };
 
       const response = manageInvoiceRequest(this.user, this.software, manageInvoiceOptions, this.options);
@@ -122,14 +153,6 @@ export class Navi {
     }
   }
 
-  /**
-   *
-   * @param {string} invoiceNumber - A keresett számla száma
-   * @param {InvoiceDirection} invoiceDirection - A keresés iránya, a keresés elvégezhető kiállítóként és vevőként is
-   * @param {string} batchIndex - A módosító okirat sorszáma kötegelt módosítás esetén
-   * @param {string} supplierTaxNumber - A kiállító adószáma vevő oldali keresés esetén
-   * @returns
-   */
   async queryInvoiceData(
     invoiceNumber: string,
     invoiceDirection: InvoiceDirection,
@@ -202,7 +225,7 @@ export class Navi {
     }
   }
 
-  async queryTransactionList(page: number, dateTimeFrom: Date, dateTimeTo: Date, requestStatus?: RequestStatus) {
+  async queryTransactionList(page: number, dateTimeFrom: string, dateTimeTo: string, requestStatus?: RequestStatus) {
     let queryTransactionListOptions: QueryTransactionListProps = {
       page,
       insDate: {

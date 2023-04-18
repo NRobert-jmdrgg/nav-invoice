@@ -6,7 +6,7 @@ import { createRequestSignature } from '../utils/createRequestSignature';
 import sendNavRequest from '../sendNavRequest';
 import { ManageInvoiceResponse } from './types/response';
 import writeToXML from '../utils/writeToXML';
-import { OrderSchema, reOrder } from '../utils/reOrder';
+// import { reOrder } from '../utils/reOrder';
 // import { fixKnownArrays } from '../utils/fixKnownArrays';
 import { NaviOptions } from '../navi';
 
@@ -26,7 +26,7 @@ export default async function manageInvoiceRequest(
   options?: NaviOptions
 ): Promise<ManageInvoiceResponse> {
   // sorrend
-  reOrder(props, orderSchema);
+  // reOrder(props, orderSchema);
 
   // request létrehozása
   const request = createRequest('ManageInvoiceRequest', user, software, props);
@@ -59,20 +59,5 @@ export default async function manageInvoiceRequest(
     throw error;
   }
 }
-
-const orderSchema: OrderSchema[] = [
-  {
-    path: '',
-    order: ['exchangeToken', 'invoiceOperations'],
-  },
-  {
-    path: 'options.invoiceOperations.invoiceOperation',
-    order: ['index', 'invoiceOperation', 'invoiceData', 'electronicInvoiceHash'],
-  },
-  {
-    path: 'options.invoiceOperations',
-    order: ['compressedContent', 'invoiceOperation'],
-  },
-];
 
 const knownArrays = ['ManageInvoiceResponse.result.notifications.notification'];

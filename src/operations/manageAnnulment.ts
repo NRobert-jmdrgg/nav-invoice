@@ -5,15 +5,12 @@ import { createRequestSignature, Operation } from '../utils/createRequestSignatu
 import sendNavRequest from '../sendNavRequest';
 import { ManageAnnulmentResponse } from './types/response';
 import writeToXML from '../utils/writeToXML';
-import { invoiceAnnulment } from '../operations/types/invoiceAnnulment';
-import { annulmentOperation } from './types/requestProps';
-import { utf8ToBase64 } from '../utils/base64';
+import { InvoiceAnnulment } from '../operations/types/invoiceAnnulment';
 import { OrderSchema, reOrder } from '../utils/reOrder';
-// import { fixKnownArrays } from '../utils/fixKnownArrays';
 import { NaviOptions } from '../navi';
 
 /**
- * Operáció a technikai érvénytelenítések beküldésére szolgáló operáció
+ * Technikai érvénytelenítések beküldésére szolgáló operáció
  * @param user technikai felhasználó adatok
  * @param software software adatok
  * @param props
@@ -65,25 +62,8 @@ export async function manageAnnulmentRequest(
 
 export type invoiceAnnulmentProps = {
   index: number;
-  invoiceAnnulment: invoiceAnnulment;
+  invoiceAnnulment: InvoiceAnnulment;
 };
-
-/**
- * ManageInvoiceAnnulement options segédfüggvény
- * @param props indexek és invoiceAnnulment adatokat tartalmazó tömb
- * @returns annulementOperation tömb
- */
-export function createInvoiceAnnulmentOperations(props: invoiceAnnulmentProps[]): annulmentOperation[] {
-  return props.map((p) => {
-    const xml = writeToXML({ InvoiceAnnulment: p.invoiceAnnulment });
-    const base64string = utf8ToBase64(xml);
-    return {
-      index: p.index,
-      annulmentOperation: 'ANNUL',
-      invoiceAnnulment: base64string,
-    };
-  });
-}
 
 const orderSchema: OrderSchema[] = [
   {

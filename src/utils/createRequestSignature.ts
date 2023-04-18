@@ -26,10 +26,7 @@ export function createRequestSignature(
   if (operations) {
     operations.forEach((operation) => {
       const hash = createHash('sha3-512');
-      partialSignature += hash
-        .update(operation.operationType + operation.base64data)
-        .digest('hex')
-        .toUpperCase();
+      partialSignature += hash.update(`${operation.operationType}${operation.base64data}`).digest('hex').toUpperCase();
     });
   }
 
