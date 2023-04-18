@@ -9,8 +9,8 @@
   "main": "dist/navi.js",
   "types": "dist/navi.d.ts",
   "scripts": {
-    "build": "tsc",
-    "start": "node dist/index.js"
+    "build": "tsc"
+    
   },
   "keywords": [
     "nav",
