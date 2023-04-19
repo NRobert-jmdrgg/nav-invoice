@@ -1,4 +1,5 @@
-import { resSoftware, BasicHeader, BasicResult, Software } from '../../baseTypes';
+import { resSoftware, BasicHeader, BasicResult } from './baseTypes';
+import { Software } from '../navi';
 
 import { TechnicalValidationMessagesType } from './response';
 

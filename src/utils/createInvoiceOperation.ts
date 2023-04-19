@@ -1,14 +1,8 @@
 import { createHash } from 'crypto';
-import { InvoiceData } from '../operations/types/invoiceData';
-import { InvoiceOperation, InvoiceOperationObj } from '../operations/types/requestProps';
+import { InvoiceOperationObj, InvoiceOperationProps } from '../types/requestProps';
 import { utf8ToBase64 } from './base64';
 import writeToXML from './writeToXML';
 import { compressData } from './gzip';
-
-export type InvoiceOperationProps = {
-  invoiceOperation: InvoiceOperation;
-  invoiceData: InvoiceData;
-};
 
 export default function createInvoiceOperation(
   compressedContet: boolean,

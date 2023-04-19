@@ -1,4 +1,3 @@
-import { Software, User } from './baseTypes';
 import { manageAnnulmentRequest } from './operations/manageAnnulment';
 import manageInvoiceRequest from './operations/manageInvoice';
 import queryInvoiceChainDigestRequest from './operations/queryInvoiceChainDigest';
@@ -9,14 +8,16 @@ import queryTaxpayerRequest from './operations/queryTaxpayer';
 import queryTransactionListRequest from './operations/queryTransactionList';
 import queryTransactionStatusRequest from './operations/queryTransactionStatus';
 import tokenExchangeRequest from './operations/tokenExchange';
-import { InvoiceAnnulmentParams } from './operations/types/invoiceAnnulment';
+import { NaviOptions, Software, User } from './types/navi';
 import {
   AdditionalQueryParams,
   AnnulmentOperation,
+  InvoiceAnnulmentParams,
   InvoiceChainQuery,
   InvoiceDirection,
   InvoiceNumberQuery,
   InvoiceOperationObj,
+  InvoiceOperationProps,
   InvoiceQueryParams,
   ManageAnnulmentProps,
   ManageInvoiceProps,
@@ -31,16 +32,11 @@ import {
   RelationalQueryParams,
   RequestStatus,
   TransactionQueryParams,
-} from './operations/types/requestProps';
+} from './types/requestProps';
 import createInvoiceAnnulment from './utils/createInvoiceAnnulment';
-import createInvoiceOperation, { InvoiceOperationProps } from './utils/createInvoiceOperation';
+import createInvoiceOperation from './utils/createInvoiceOperation';
 import readInvoiceData from './utils/readInvoiceData';
 import createInvoice from './utils/createInvoice';
-
-export type NaviOptions = {
-  returnWithXml?: boolean;
-  testing?: boolean;
-};
 
 export class Navi {
   private user: User;
@@ -153,20 +149,8 @@ export class Navi {
     }
   }
 
-  async queryInvoiceData(
-    invoiceNumber: string,
-    invoiceDirection: InvoiceDirection,
-    batchIndex?: string,
-    supplierTaxNumber?: string
-  ) {
-    let queryInvoiceDataOptions: QueryInvoiceDataProps = {
-      invoiceNumberQuery: {
-        invoiceDirection,
-        invoiceNumber,
-        batchIndex,
-        supplierTaxNumber,
-      },
-    };
+  async queryInvoiceData(invoiceNumberQuery: InvoiceNumberQuery) {
+    let queryInvoiceDataOptions: QueryInvoiceDataProps = { invoiceNumberQuery };
 
     try {
       const response = await queryInvoiceDataRequest(this.user, this.software, queryInvoiceDataOptions, this.options);

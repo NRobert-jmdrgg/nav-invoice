@@ -1,7 +1,7 @@
 import makeid from './utils/makeid';
 import { createHash } from 'crypto';
-import { User, Software } from './baseTypes';
 import { OrderSchema, reOrder } from './utils/reOrder';
+import { User, Software } from './types/navi';
 
 /**
  * Request object

@@ -1,4 +1,4 @@
-import { InvoiceData, InvoiceMainType, InvoiceType } from '../operations/types/invoiceData';
+import { InvoiceData, InvoiceMainType, InvoiceType } from '../types/invoiceData';
 import { OrderSchema, reOrder } from './reOrder';
 
 export default function createInvoice(

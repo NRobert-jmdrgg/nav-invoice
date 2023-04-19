@@ -1,13 +1,12 @@
-import { User, Software } from '../baseTypes';
 import createRequest from '../createNavRequest';
-import { QueryTransactionListProps } from './types/requestProps';
+import { QueryTransactionListProps } from '../types/requestProps';
 import { createRequestSignature } from '../utils/createRequestSignature';
 import sendNavRequest from '../sendNavRequest';
-import { QueryTransactionListResponse } from './types/response';
+import { QueryTransactionListResponse } from '../types/response';
 import writeToXML from '../utils/writeToXML';
 import { OrderSchema, reOrder } from '../utils/reOrder';
+import { NaviOptions, Software, User } from '../types/navi';
 // import { fixKnownArrays } from '../utils/fixKnownArrays';
-import { NaviOptions } from '../navi';
 
 /**
  * a kérésben megadott időintervallumban, a technikai felhasználóhoz tartozó

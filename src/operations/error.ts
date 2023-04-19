@@ -1,6 +1,7 @@
-import { BasicHeader, BasicResult, Notifications, Software } from '../baseTypes';
-import { GeneralErrorResponse, GeneralExceptionResponse } from './types/error';
-import { TechnicalValidationMessagesType } from './types/response';
+import { BasicHeader, BasicResult, Notifications } from '../types/baseTypes';
+import { GeneralErrorResponse, GeneralExceptionResponse } from '../types/error';
+import { Software } from '../types/navi';
+import { TechnicalValidationMessagesType } from '../types/response';
 
 export class GeneralError extends Error {
   header: BasicHeader;

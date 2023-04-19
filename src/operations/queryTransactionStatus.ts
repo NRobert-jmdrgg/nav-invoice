@@ -1,13 +1,11 @@
-import { User, Software } from '../baseTypes';
 import createRequest from '../createNavRequest';
-import { QueryTransactionStatusProps } from './types/requestProps';
+import { QueryTransactionStatusProps } from '../types/requestProps';
 import { createRequestSignature } from '../utils/createRequestSignature';
 import sendNavRequest from '../sendNavRequest';
-import { QueryTransactionStatusResponse } from './types/response';
+import { QueryTransactionStatusResponse } from '../types/response';
 import writeToXML from '../utils/writeToXML';
 import { OrderSchema, reOrder } from '../utils/reOrder';
-// import { fixKnownArrays } from '../utils/fixKnownArrays';
-import { NaviOptions } from '../navi';
+import { User, Software, NaviOptions } from '../types/navi';
 
 /**
  * A számlaadat-szolgáltatás feldolgozás aktuális állapotának és eredményének lekérdezésére szolgáló operáció

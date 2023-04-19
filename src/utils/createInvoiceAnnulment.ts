@@ -1,4 +1,4 @@
-import { AnnulmentCodeType, InvoiceAnnulment } from '../operations/types/invoiceAnnulment';
+import { AnnulmentCodeType, InvoiceAnnulment } from '../types/invoiceAnnulment';
 import { utf8ToBase64 } from './base64';
 import writeToXML from './writeToXML';
 

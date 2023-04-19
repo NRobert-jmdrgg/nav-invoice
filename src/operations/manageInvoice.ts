@@ -1,15 +1,11 @@
-import { User, Software } from '../baseTypes';
 import createRequest from '../createNavRequest';
-import { ManageInvoiceProps } from './types/requestProps';
+import { ManageInvoiceProps } from '../types/requestProps';
 import { Operation } from '../utils/createRequestSignature';
 import { createRequestSignature } from '../utils/createRequestSignature';
 import sendNavRequest from '../sendNavRequest';
-import { ManageInvoiceResponse } from './types/response';
+import { ManageInvoiceResponse } from '../types/response';
+import { NaviOptions, Software, User } from '../types/navi';
 import writeToXML from '../utils/writeToXML';
-// import { reOrder } from '../utils/reOrder';
-// import { fixKnownArrays } from '../utils/fixKnownArrays';
-import { NaviOptions } from '../navi';
-
 /**
  * A számlaadat-szolgáltatás beküldésére szolgáló operáció, ezen keresztül van
 lehetőség számla, módosító vagy stornó számlaadat-szolgáltatást a NAV-nak beküldeni.

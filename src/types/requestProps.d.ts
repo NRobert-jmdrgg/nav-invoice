@@ -2,6 +2,25 @@
  * Operáció opció típusok
  */
 
+export type InvoiceAnnulmentParams = {
+  annulmentReference: string; // A technikai érvénytelenítéssel érintett számla vagy módosító okirat sorszáma
+  annulmentTimestamp: string; // A technikai érvénytelenítés időbélyege a forrásrendszerben UTC idő szerint
+  annulmentCode: AnnulmentCodeType; //A technikai érvénytelenítés kódja
+  annulmentReason: string; // A technikai érvénytelenítés oka
+};
+
+export type InvoiceOperationProps = {
+  invoiceOperation: InvoiceOperation;
+  invoiceData: InvoiceData;
+};
+
+export type InvoiceNumberQuery = {
+  invoiceNumber: string; // A keresett számla száma
+  invoiceDirection: InvoiceDirection; // A keresés iránya, a keresés elvégezhető kiállítóként és vevőként is
+  batchIndex?: string; // A módosító okirat sorszáma kötegelt módosítás esetén
+  supplierTaxNumber?: string; // A kiállító adószáma vevő oldali keresés esetén;
+};
+
 export type AnnulmentOperation = {
   index: number; // A technikai érvénytelenítés pozíciója a kérésen belül
   annulmentOperation: 'ANNUL'; // A kért technikai érvénytelenítési művelet megjelölése

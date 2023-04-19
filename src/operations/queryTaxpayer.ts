@@ -1,12 +1,10 @@
-import { User, Software } from '../baseTypes';
 import createRequest from '../createNavRequest';
-import { QueryTaxpayerProps } from './types/requestProps';
+import { QueryTaxpayerProps } from '../types/requestProps';
 import { createRequestSignature } from '../utils/createRequestSignature';
 import sendNavRequest from '../sendNavRequest';
-import { QueryTaxpayerResponse } from './types/response';
+import { QueryTaxpayerResponse } from '../types/response';
 import writeToXML from '../utils/writeToXML';
-// import { fixKnownArrays } from '../utils/fixKnownArrays';
-import { NaviOptions } from '../navi';
+import { User, Software, NaviOptions } from '../types/navi';
 
 /**
  * belföldi adószám validáló operáció, mely a számlakiállítás folyamatába építve képes

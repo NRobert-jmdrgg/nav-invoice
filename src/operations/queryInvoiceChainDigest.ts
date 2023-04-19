@@ -1,13 +1,11 @@
-import { User, Software } from '../baseTypes';
 import createRequest from '../createNavRequest';
-import { QueryInvoiceChainDigestProps } from './types/requestProps';
+import { QueryInvoiceChainDigestProps } from '../types/requestProps';
 import { createRequestSignature } from '../utils/createRequestSignature';
 import sendNavRequest from '../sendNavRequest';
-import { QueryInvoiceChainDigestResponse } from './types/response';
+import { QueryInvoiceChainDigestResponse } from '../types/response';
 import writeToXML from '../utils/writeToXML';
 import { OrderSchema, reOrder } from '../utils/reOrder';
-// import { fixKnownArrays } from '../utils/fixKnownArrays';
-import { NaviOptions } from '../navi';
+import { NaviOptions, Software, User } from '../types/navi';
 
 /**
  * Az operáció a megadott keresőfeltételeknek megfelelő, lapozható számlalistát ad vissza a válaszban. A lista elemei a megadott alapszámlához tartozó számlalánc elemei

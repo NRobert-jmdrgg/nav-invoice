@@ -1,13 +1,12 @@
-import { User, Software } from '../baseTypes';
-import { ManageAnnulmentProps } from './types/requestProps';
+import { ManageAnnulmentProps } from '../types/requestProps';
 import createRequest from '../createNavRequest';
 import { createRequestSignature, Operation } from '../utils/createRequestSignature';
 import sendNavRequest from '../sendNavRequest';
-import { ManageAnnulmentResponse } from './types/response';
+import { ManageAnnulmentResponse } from '../types/response';
 import writeToXML from '../utils/writeToXML';
-import { InvoiceAnnulment } from '../operations/types/invoiceAnnulment';
+import { InvoiceAnnulment } from '../types/invoiceAnnulment';
 import { OrderSchema, reOrder } from '../utils/reOrder';
-import { NaviOptions } from '../navi';
+import { NaviOptions, Software, User } from '../types/navi';
 
 /**
  * Technikai érvénytelenítések beküldésére szolgáló operáció

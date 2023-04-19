@@ -1,9 +1,9 @@
 import axios from 'axios';
-import { NaviOptions } from './navi';
-import { GeneralErrorResponse, GeneralExceptionResponse } from './operations/types/error';
+import { GeneralErrorResponse, GeneralExceptionResponse } from './types/error';
 // import { fixKnownArrays } from './utils/fixKnownArrays';
 import readFromXml from './utils/readFromXml';
 import { GeneralError, GeneralException } from './operations/error';
+import { NaviOptions } from './types/navi';
 
 type Response<R> = R & {
   responseXml?: string;

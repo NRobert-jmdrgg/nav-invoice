@@ -1,4 +1,4 @@
-import { resSoftware, BasicHeader, BasicResult, Software } from '../../baseTypes';
+import { resSoftware, BasicHeader, BasicResult, Software } from './baseTypes';
 
 /**
  * Nav válasz xml struktúrák

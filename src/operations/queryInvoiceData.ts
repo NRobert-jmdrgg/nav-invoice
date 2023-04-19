@@ -1,13 +1,11 @@
-import { User, Software } from '../baseTypes';
 import createRequest from '../createNavRequest';
-import { QueryInvoiceDataProps } from './types/requestProps';
+import { QueryInvoiceDataProps } from '../types/requestProps';
 import { createRequestSignature } from '../utils/createRequestSignature';
 import sendNavRequest from '../sendNavRequest';
-import { QueryInvoiceDataResponse } from './types/response';
+import { QueryInvoiceDataResponse } from '../types/response';
 import writeToXML from '../utils/writeToXML';
 import { OrderSchema, reOrder } from '../utils/reOrder';
-// import { fixKnownArrays } from '../utils/fixKnownArrays';
-import { NaviOptions } from '../navi';
+import { NaviOptions, Software, User } from '../types/navi';
 
 /**
  * Egy számlaszám alapján működő lekérdező operáció. Az operáció a megadott számlaszám teljes adattartalmát adja

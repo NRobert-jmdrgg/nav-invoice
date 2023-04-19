@@ -1,12 +1,11 @@
-import { User, Software } from '../baseTypes';
 import createRequest from '../createNavRequest';
-import { QueryInvoiceDigestProps } from './types/requestProps';
+import { QueryInvoiceDigestProps } from '../types/requestProps';
 import { createRequestSignature } from '../utils/createRequestSignature';
 import sendNavRequest from '../sendNavRequest';
-import { QueryInvoiceDigestResponse } from './types/response';
+import { QueryInvoiceDigestResponse } from '../types/response';
 import writeToXML from '../utils/writeToXML';
 import { OrderSchema, reOrder } from '../utils/reOrder';
-import { NaviOptions } from '../navi';
+import { User, Software, NaviOptions } from '../types/navi';
 
 /**
  * Üzleti keresőparaméterek alapján működő lekérdező operáció. Az operáció a megadott keresőfeltételeknek

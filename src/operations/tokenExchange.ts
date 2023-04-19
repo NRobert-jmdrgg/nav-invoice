@@ -2,10 +2,9 @@ import createRequest from '../createNavRequest.js';
 import sendNavRequest from '../sendNavRequest.js';
 import { createRequestSignature } from '../utils/createRequestSignature';
 import { createDecipheriv } from 'crypto';
-import { User, Software } from '../baseTypes';
-import { TokenExchangeResponse } from './types/response.js';
+import { TokenExchangeResponse } from '../types/response.js';
 import writeToXML from '../utils/writeToXML';
-import { NaviOptions } from '../navi.js';
+import { User, Software, NaviOptions } from '../types/navi.js';
 
 /**
  * A számlaadat-szolgáltatás beküldését megelőző egyszer használatos adatszolgáltatási token kiadását végző operáció.

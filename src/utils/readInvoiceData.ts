@@ -1,4 +1,4 @@
-import { InvoiceData } from '../operations/types/invoiceData';
+import { InvoiceData } from '../types/invoiceData';
 import readFromXml from './readFromXml';
 import { base64ToUtf8 } from './base64';
 import { uncompressData } from './gzip';

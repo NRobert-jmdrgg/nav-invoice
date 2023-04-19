@@ -12,13 +12,6 @@ type Namespaces = {
   '$xmlns:base': 'http://schemas.nav.gov.hu/OSA/3.0/base';
 };
 
-export type InvoiceAnnulmentParams = {
-  annulmentReference: string; // A technikai érvénytelenítéssel érintett számla vagy módosító okirat sorszáma
-  annulmentTimestamp: string; // A technikai érvénytelenítés időbélyege a forrásrendszerben UTC idő szerint
-  annulmentCode: AnnulmentCodeType; //A technikai érvénytelenítés kódja
-  annulmentReason: string; // A technikai érvénytelenítés oka
-};
-
 export type invoiceAnnulmentObj = InvoiceAnnulmentParams & Namespaces;
 
 export type InvoiceAnnulment = {
