@@ -4,6 +4,7 @@
     "module": "commonjs",
     "moduleResolution": "node",
     "declaration": true,
+    "declarationDir": "dist/types",
     "pretty": true,
     "noEmitOnError": true,
     "strict": true,
